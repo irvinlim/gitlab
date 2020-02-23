@@ -887,6 +887,8 @@ func webhookHandler(c *integram.Context, request *integram.WebhookContext) (err 
 			return msg.SetText(text).
 				EnableHTML().Send()
 		}
+	default:
+		c.Log().WithField("objectKind", wh.ObjectKind).Warn("ObjectKind not handled by webhookHandler")
 	}
 	return
 }
