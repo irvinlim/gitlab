@@ -9,13 +9,13 @@ import (
 	"time"
 
 	"github.com/requilence/integram"
-	api "github.com/integram-org/gitlab/api"
+	api "github.com/xanzy/go-gitlab"
 	"golang.org/x/oauth2"
 )
 
 var m = integram.HTMLRichText{}
 
-//Config contains OAuth data only
+// Config contains OAuth data only
 type Config struct {
 	integram.OAuthProvider
 	integram.BotConfig
@@ -84,7 +84,6 @@ func (c Config) Service() *integram.Service {
 			{sendCommitComment, 10, integram.JobRetryFibonacci},
 			{cacheNickMap, 10, integram.JobRetryFibonacci},
 		},
-
 		Actions: []interface{}{
 			hostedAppIDEntered,
 			hostedAppSecretEntered,
@@ -406,7 +405,7 @@ func client(c *integram.Context) *api.Client {
 }
 
 func sendIssueComment(c *integram.Context, projectID int, issueID int, text string) error {
-	note, _, err := client(c).Notes.CreateIssueNote(projectID, issueID, &api.CreateIssueNoteOptions{Body: text})
+	note, _, err := client(c).Notes.CreateIssueNote(projectID, issueID, &api.CreateIssueNoteOptions{Body: &text})
 
 	if note != nil {
 		c.Message.UpdateEventsID(c.Db(), "issue_note_"+strconv.Itoa(note.ID))
@@ -416,7 +415,7 @@ func sendIssueComment(c *integram.Context, projectID int, issueID int, text stri
 }
 
 func sendMRComment(c *integram.Context, projectID int, MergeRequestID int, text string) error {
-	note, _, err := client(c).Notes.CreateMergeRequestNote(projectID, MergeRequestID, &api.CreateMergeRequestNoteOptions{Body: text})
+	note, _, err := client(c).Notes.CreateMergeRequestNote(projectID, MergeRequestID, &api.CreateMergeRequestNoteOptions{Body: &text})
 
 	if note != nil {
 		c.Message.UpdateEventsID(c.Db(), noteUniqueID(projectID, strconv.Itoa(note.ID)))
@@ -426,7 +425,7 @@ func sendMRComment(c *integram.Context, projectID int, MergeRequestID int, text 
 }
 
 func sendSnippetComment(c *integram.Context, projectID int, SnippetID int, text string) error {
-	note, _, err := client(c).Notes.CreateSnippetNote(projectID, SnippetID, &api.CreateSnippetNoteOptions{Body: text})
+	note, _, err := client(c).Notes.CreateSnippetNote(projectID, SnippetID, &api.CreateSnippetNoteOptions{Body: &text})
 	if note != nil {
 		c.Message.UpdateEventsID(c.Db(), noteUniqueID(projectID, strconv.Itoa(note.ID)))
 	}
@@ -442,12 +441,11 @@ func trim(s string, max int) string {
 }
 
 func sendCommitComment(c *integram.Context, projectID int, commitID string, msg *integram.IncomingMessage) error {
-	note, _, err := client(c).Notes.CreateCommitNote(projectID, commitID, &api.CreateCommitNoteOptions{Note: msg.Text})
+	note, _, err := client(c).Discussions.CreateCommitDiscussion(projectID, commitID, &api.CreateCommitDiscussionOptions{Body: &msg.Text})
 	if err != nil {
 		return err
 	}
-	// note id not available for commit comment. So use the date. Collisions are unlikely here...
-	c.Message.UpdateEventsID(c.Db(), noteUniqueID(projectID, note.CreatedAt))
+	c.Message.UpdateEventsID(c.Db(), noteUniqueID(projectID, note.ID))
 
 	return err
 }

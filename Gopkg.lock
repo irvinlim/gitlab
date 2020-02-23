@@ -184,6 +184,14 @@
   revision = "83720e22971a8301c5b2738c9364accd3d9eb13a"
 
 [[projects]]
+  digest = "1:d34b7ecb388f39521d9f997b8051120a2105e71d1be8f4a4568ed264069fe767"
+  name = "github.com/xanzy/go-gitlab"
+  packages = ["."]
+  pruneopts = ""
+  revision = "e42c1f92fca9b60ede60a0a92d43056d33dbfb75"
+  version = "v0.26.0"
+
+[[projects]]
   branch = "master"
   digest = "1:43adf91783cc814f60c0dd21c9aadf0b5284721e13542e124536638e0b43a6b3"
   name = "golang.org/x/crypto"
@@ -276,9 +284,9 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/google/go-querystring/query",
     "github.com/kelseyhightower/envconfig",
     "github.com/requilence/integram",
+    "github.com/xanzy/go-gitlab",
     "golang.org/x/oauth2",
   ]
   solver-name = "gps-cdcl"

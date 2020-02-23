@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/requilence/integram"
 	"github.com/integram-org/gitlab"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/requilence/integram"
 )
 
-func main(){
+func main() {
 	var cfg gitlab.Config
 	envconfig.MustProcess("GITLAB", &cfg)
 

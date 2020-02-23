@@ -25,5 +25,5 @@
   name = "github.com/requilence/integram"
 
 [[constraint]]
-  branch = "master"
-  name = "github.com/google/go-querystring"
+  name = "github.com/xanzy/go-gitlab"
+  version = "0.26.0"
