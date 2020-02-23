@@ -560,15 +560,13 @@ func webhookHandler(c *integram.Context, request *integram.WebhookContext) (err 
 
 	if wh.Repository.Homepage != "" {
 		c.SetServiceBaseURL(wh.Repository.Homepage)
-	} else if wh.ObjectAttributes != nil {
-		if wh.ObjectAttributes.URL == "" {
-			c.SetServiceBaseURL(wh.ObjectAttributes.URL)
-		} else if wh.Commit != nil {
-			c.SetServiceBaseURL(wh.Commit.URL)
-		} else {
-			raw, _ := request.RAW()
-			c.Log().WithField("wh", string(*raw)).Error("gitlab webhook empty url")
-		}
+	} else if wh.ObjectAttributes != nil && wh.ObjectAttributes.URL != "" {
+		c.SetServiceBaseURL(wh.ObjectAttributes.URL)
+	} else if wh.Commit != nil && wh.Commit.URL != "" {
+		c.SetServiceBaseURL(wh.Commit.URL)
+	} else {
+		raw, _ := request.RAW()
+		c.Log().WithField("wh", string(*raw)).Error("gitlab webhook empty url")
 	}
 
 	switch wh.ObjectKind {
