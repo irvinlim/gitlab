@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"path"
 	"strconv"
 	"strings"
 	"time"
@@ -100,8 +101,8 @@ func (c Config) Service() *integram.Service {
 				ClientID:     c.ID,
 				ClientSecret: c.Secret,
 				Endpoint: oauth2.Endpoint{
-					AuthURL:  "https://gitlab.com/oauth/authorize",
-					TokenURL: "https://gitlab.com/oauth/token",
+					AuthURL:  c.OAuthProvider.BaseURL.String() + path.Join(c.OAuthProvider.BaseURL.GetPath(), "/oauth/authorize"),
+					TokenURL: c.OAuthProvider.BaseURL.String() + path.Join(c.OAuthProvider.BaseURL.GetPath(), "/oauth/token"),
 				},
 			},
 		},
